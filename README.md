@@ -18,7 +18,7 @@ causal estimates.
 ## Files
 - `writeup.pdf`: two-page summary of findings, confidence and limitations
 - `protection_gap.ipynb`: full analysis (Python, statsmodels), with outputs
-- `decisions.txt`: log of data and modelling decisions
+- `decisions.rtf`: log of data and modelling decisions
 
 ## Data
 - Disaster data: EM-DAT, CRED / UCLouvain. Not included here under EM-DAT's terms of
