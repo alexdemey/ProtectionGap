@@ -1,0 +1,109 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2867
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;\f2\froman\fcharset0 Times-Roman;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat0\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid101\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid201\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid3}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww28860\viewh16760\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 Aug 13
+\f1\b0 \
+- downloaded EM-DAT public table with registered academic access\
+- dropped technological disasters, different insurance product and worse reporting than 	natural.\
+- kept year 2000 and above only, years before that are too sparsely \
+-only using adjusted damage and insured costs, but keeping historical values as a reference\
+\
+- \expnd0\expndtw0\kerning0
+Downloaded World Development Indicators via databank.worldbank.org, all countries\kerning1\expnd0\expndtw0 \
+\
+\expnd0\expndtw0\kerning0
+-used GDP per capita, PPP (constant 2021 international $) series NY.GDP.PCAP.PP.KD. its constant rather than current dollars so that values are comparable across years\
+-also used domestic credit to private sector % of GDP, population total, and urban population % ot total\kerning1\expnd0\expndtw0 \
+-downloaded worldwide governance indicators (rule of law estimate and government effectiveness estimate), post 2025 methodology revision vintage, used the same file throughout the whole project, from the databank of the world bank.\
+- removed disasters that were in 2026 as they lacked CPI details so they were not adjusted\
+- removed disasters taking place in remote or small areas, such as canary islands, cook 	islands, Wallis and Futuna islands, as the world bank didn't have any data on their gdp or other 	categories.\
+- when there isn't a value the world bank uses .. so replaced with a blank cell to make it not read as text before joining.\
+
+\f0\b \
+Sep 16
+\f1\b0 \
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Sample> drop_blanks is the baseline dataset. Rows with total damage of zero or missing are excluded, since the log of zero is undefined. Sample restrictions already applied: natural hazards only, 2000 onwards, events with an inflation-adjusted damage figure, and events with World Bank data available for the country-year.\
+Outcome> uncovered \'97 share of total damage not covered by insurance, computed as 1 \uc0\u8722  (insured damage adjusted \'f7 total damage adjusted). Bounded 0 to 1.\
+Explanatory variables\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls1\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 log_gdp \'97 natural log of GDP per capita, PPP, constant 2021 international $. Logged so equal proportional income differences count equally.\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 credit_gdp \'97 domestic credit to private sector, % of GDP. Proxy for financial system depth.\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 rule_of_law \'97 WGI Rule of Law estimate. Proxy for institutional quality and contract enforcement.\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 log_damage \'97 natural log of total damage adjusted. Controls for event size.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Fixed effects> Hazard-type dummies and year dummies. Hazard because floods, storms and earthquakes are insured through different products in different markets; year to absorb global trends and shocks.\
+Standard errors> Clustered by country (iso3). Repeated disasters within a country are not independent observations.\
+Baseline estimation> OLS. A fractional logit (GLM, binomial family, same clustering) is run alongside, since the outcome is bounded and OLS ignores that. The two are compared on signs and significance, not on raw coefficient sizes.\
+Stacking sequence. The three explanations are adjudicated by running the model three times with growing variable lists, holding hazard and year dummies constant throughout:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls2\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 log_gdp alone\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 log_gdp + credit_gdp\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	3	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 log_gdp + credit_gdp + rule_of_law\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 The quantity of interest is what happens to the log_gdp coefficient at each step. If it holds, income does independent predictive work. If it collapses toward zero, income was proxying for whatever was just added. Both outcomes are reported.\
+Robustness checks, declared in advance, in priority order.\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls3\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Re-run the baseline on all three datasets, drop_blanks, blanks_zero, both_present, and report headline coefficients side by side.\
+\ls3\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}2 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Variance inflation factors for the four numeric explanatory variables; substitute govt_eff for rule_of_law in the baseline.\
+\ls3\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	3	}3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Sample splits: above/below the median of log_gdp; by hazard type; before/after 2010.\
+\ls3\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	4	}4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Confirm no conclusion rests on within-country change between adjacent events; keep all language cross-sectional.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Interpretation rules. Every coefficient is translated into a plain-English sentence before appearing in any document. Conclusions use "falls with" or "is associated with", never "causes". The write-up states that these are conditional correlations, not causal estimates.\
+Note on the blanks, EM-DAT records no zero values for insured damage, so a blank cannot be distinguished from a true absence of coverage. drop_blanks may therefore drop uninsured events disproportionately, biasing measured coverage upward. drop_blanks and blanks_zero are treated as bounds rather than main-analysis-and-robustness-check.\
+Any change to this specification after results are seen will be logged separately, with the reason and the date.\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b \cf0 Sep 19\
+Reproduction Targets:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b0 \cf0 Count:713\
+Mean % uncovered: 54.40%\
+Median % uncovered: 50.0%\
+Mean log gdp: 10.53\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 \outl0\strokewidth0 High income average uncovered %	     : 46.45%\
+Upper Middle income average uncovered %:78.32%\
+Lower Middle income average uncovered %:89.61%\
+Low income average uncovered %	     :96.07%\
+
+\f0\b Sep 20\
+\pard\pardeftab720\partightenfactor0
+
+\f1\b0 \cf0 \outl0\strokewidth0 \strokec2 3 rows had insured damage exceeding total damage (JAM 2024, JPN 2007, USA 2015 \'97 all storms/wildfire); removed as impossible. 683 \uc0\u8594  680.\
+Missing values in model variables: log_gdp 20, credit_gdp 66, rule_of_law 30. 680 \uc0\u8594  593 rows.\
+Hazard categories with fewer than 10 events (Drought 8, Extreme temperature 7, Mass movement 4) dropped to avoid a rank-deficient design matrix. 593 \uc0\u8594  574.\
+Baseline: 574 events, R\'b2 0.475. Rule of law strongest predictor (\uc0\u8722 0.102, p=0.005); income weak once institutions controlled (\u8722 0.052, p=0.095).\
+VIFs all below 5 \'97 the three explanations are separable in this sample.\
+Fractional logit agrees with OLS on signs and significance throughout.\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 \
+\
+\
+\
+\
+
+\f2 \
+}
